@@ -29,7 +29,11 @@ import org.codehaus.classworlds.ClassRealm;
 import org.codehaus.plexus.archiver.UnArchiver;
 
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.lang.ProcessBuilder;
 
 import static java.util.Arrays.asList;
 import static org.codehaus.plexus.util.StringUtils.isNotBlank;
@@ -188,10 +192,26 @@ abstract class AbstractVagrantMojo extends AbstractGemMojo {
     }
 
     protected final void cli(Iterable<String> args) throws IOException, ScriptException {
+        ArrayList<String> command = new ArrayList<String>();
+        command.add("vagrant");
+        for (String arg : args) if (isNotBlank(arg)) command.add(arg);
+        ProcessBuilder pb = new ProcessBuilder(command);
+        Map<String,String> env = pb.environment();
+        env.put("VAGRANT_HOME", vagrantHome.toString());
+        env.put("VAGRANT_RC", vagrantRc.toString());
+        pb.redirectErrorStream(true);
+        Process proc = pb.start();
+        InputStreamReader read = new InputStreamReader(proc.getInputStream());
+        int ch;
+        while((ch = read.read())!=-1) System.out.print((char)ch);
+
+        read.close();
+/*
         factory.addEnv("VAGRANT_HOME", vagrantHome);
         factory.addEnv("VAGRANT_RC", vagrantRc);
         final Script script = factory.newScriptFromSearchPath("vagrant");
         for (String arg : args) if (isNotBlank(arg)) script.addArg(arg);
         script.execute();
+*/
     }
 }
