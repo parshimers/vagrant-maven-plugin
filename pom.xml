@@ -221,8 +221,8 @@
           <execution>
             <id>run-integration-tests</id>
             <goals>
-              <goal>install</goal>
-              <goal>run</goal>
+              <!--<goal>install</goal>-->
+              <!--<goal>run</goal>-->
             </goals>
           </execution>
         </executions>
