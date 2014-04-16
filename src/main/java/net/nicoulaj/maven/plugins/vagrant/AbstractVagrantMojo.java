@@ -15,12 +15,9 @@
  */
 package net.nicoulaj.maven.plugins.vagrant;
 
-import de.saumya.mojo.gem.AbstractGemMojo;
-import de.saumya.mojo.ruby.gems.GemManager;
-import de.saumya.mojo.ruby.script.Script;
-import de.saumya.mojo.ruby.script.ScriptException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
@@ -44,22 +41,7 @@ import static org.codehaus.plexus.util.StringUtils.isNotBlank;
  * @author <a href="http://github.com/nicoulaj">Julien Nicoulaud</a>
  * @since 1.0
  */
-abstract class AbstractVagrantMojo extends AbstractGemMojo {
-
-    /**
-     * Custom gems directory.
-     * <p/>
-     * Modifying this property has an impact on isolation/build portability, eg:
-     * <ul>
-     * <li>In {@code project.build.directory} (default): user installation can not impact build, but gems are unpacked at every build.</li>
-     * <li>In {@code project.basedir}: user installation can not impact build, gems are unpacked once for all, but files are created outside of build directory.</li>
-     * <li>Outside {@code project.basedir} (Vagrant default): user installation can impact build.</li>
-     * </ul>
-     *
-     * @parameter default-value="${project.build.directory}/vagrant/gems"
-     * @since 1.0
-     */
-    protected File gemHome;
+abstract class AbstractVagrantMojo extends AbstractMojo {
 
     /**
      * Custom {@code VAGRANT_HOME}, which is the directory where Vagrant boxes are stored.
@@ -139,59 +121,23 @@ abstract class AbstractVagrantMojo extends AbstractGemMojo {
      */
     private UnArchiver unzip;
 
-    /**
-     * Required by {@link AbstractGemMojo}.
-     *
-     * @component
-     */
-    private GemManager manager;
-
-    /** Setup {@link AbstractGemMojo}. */
-    private void setup() {
-        super.project = this.project;
-        super.localRepository = this.localRepository;
-        super.classRealm = this.classRealm;
-        super.repositorySystem = this.repositorySystem;
-        super.jrubyFork = true;
-        super.jrubyVerbose = false;
-        super.unzip = unzip;
-        super.plugin = plugin;
-        super.includeOpenSSL = true;
-        super.includeRubygemsInTestResources = false;
-        super.installRDoc = false;
-        super.installRI = false;
-        super.gemUseSystem = false;
-        super.gemHome = this.gemHome;
-        super.gemPath = this.gemHome;
-        super.binDirectory = new File(gemHome.getAbsolutePath() + "-" + plugin.getArtifactId(), "bin");
-        super.supportNative = true;
-        super.manager = this.manager;
-    }
-
-    @Override
     public final void execute() throws MojoExecutionException, MojoFailureException {
-        setup();
-        super.execute();
-    }
-
-    @Override
-    protected final void executeWithGems() throws MojoExecutionException, MojoFailureException {
-        try {
+        try{
             doExecute();
-        } catch (IOException e) {
-            throw new MojoFailureException("Vagrant execution failed", e);
-        } catch (ScriptException e) {
+        }
+        catch (IOException e){
             throw new MojoFailureException("Vagrant execution failed", e);
         }
     }
 
-    abstract protected void doExecute() throws IOException, ScriptException;
 
-    protected final void cli(String... args) throws IOException, ScriptException {
+    protected void doExecute() throws IOException {}
+
+    protected final void cli(String... args) throws IOException{
         cli(asList(args));
     }
 
-    protected final void cli(Iterable<String> args) throws IOException, ScriptException {
+    protected final void cli(Iterable<String> args) throws IOException{
         ArrayList<String> command = new ArrayList<String>();
         command.add("vagrant");
         for (String arg : args) if (isNotBlank(arg)) command.add(arg);

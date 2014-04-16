@@ -15,8 +15,6 @@
  */
 package net.nicoulaj.maven.plugins.vagrant;
 
-import de.saumya.mojo.ruby.script.ScriptException;
-
 import java.io.IOException;
 
 import static org.codehaus.plexus.util.StringUtils.isEmpty;
@@ -42,7 +40,7 @@ public final class SuspendMojo extends AbstractVagrantMojo {
     protected String vm;
 
     @Override
-    protected void doExecute() throws IOException, ScriptException {
+    protected void doExecute() throws IOException{
 
         if (!isEmpty(vm))
             cli(NAME, vm);

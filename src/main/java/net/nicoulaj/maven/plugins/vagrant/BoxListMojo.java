@@ -15,8 +15,6 @@
  */
 package net.nicoulaj.maven.plugins.vagrant;
 
-import de.saumya.mojo.ruby.script.ScriptException;
-
 import java.io.IOException;
 
 /**
@@ -33,7 +31,7 @@ public final class BoxListMojo extends AbstractVagrantMojo {
     public static final String NAME = "box-list";
 
     @Override
-    protected void doExecute() throws IOException, ScriptException {
+    protected void doExecute() throws IOException {
         cli("box", "list");
     }
 }

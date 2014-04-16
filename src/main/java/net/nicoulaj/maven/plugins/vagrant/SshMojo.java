@@ -15,8 +15,6 @@
  */
 package net.nicoulaj.maven.plugins.vagrant;
 
-import de.saumya.mojo.ruby.script.ScriptException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +63,7 @@ public final class SshMojo extends AbstractVagrantMojo {
     protected String sshArgs;
 
     @Override
-    protected void doExecute() throws IOException, ScriptException {
+    protected void doExecute() throws IOException{
 
         final List<String> args = new ArrayList<String>();
 

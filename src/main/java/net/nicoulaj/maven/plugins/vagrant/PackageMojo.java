@@ -15,8 +15,6 @@
  */
 package net.nicoulaj.maven.plugins.vagrant;
 
-import de.saumya.mojo.ruby.script.ScriptException;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,7 +72,7 @@ public final class PackageMojo extends AbstractVagrantMojo {
     protected File vagrantfile;
 
     @Override
-    protected void doExecute() throws IOException, ScriptException {
+    protected void doExecute() throws IOException{
 
         final List<String> args = new ArrayList<String>();
 
