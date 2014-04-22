@@ -52,8 +52,8 @@ abstract class AbstractVagrantMojo extends AbstractMojo {
      * <li>In {@code project.basedir}: boxes can be imported once for all, but files are created outside of build directory.</li>
      * <li>In {@code ~/.vagrant.d} (Vagrant default): user boxes can be directly used, but files are created outside of project structure.</li>
      * </ul>
-     *
      * @parameter default-value="${project.build.directory}/vagrant/vagrant.d"
+     *
      * @since 1.0
      */
     protected File vagrantHome;
@@ -67,8 +67,7 @@ abstract class AbstractVagrantMojo extends AbstractMojo {
      * <li>In {@code project.basedir}: user installation can not impact build.</li>
      * <li>In {@code ~/.vagrantrc} (Vagrant default): user installation can impact build.</li>
      * </ul>
-     *
-     * @parameter default-value="${project.build.directory}/vagrant/vagrantrc"
+     * @parameter default-value="${project.build.directory}/vagrant/vagrantrc"*
      * @since 1.0
      */
     protected File vagrantRc;
@@ -143,8 +142,9 @@ abstract class AbstractVagrantMojo extends AbstractMojo {
         for (String arg : args) if (isNotBlank(arg)) command.add(arg);
         ProcessBuilder pb = new ProcessBuilder(command);
         Map<String,String> env = pb.environment();
-        env.put("VAGRANT_HOME", vagrantHome.toString());
-        env.put("VAGRANT_RC", vagrantRc.toString());
+        System.out.println("------------------------------"+vagrantHome.toString());
+        pb.directory(vagrantHome);
+        System.out.println(env.toString());
         pb.redirectErrorStream(true);
         Process proc = pb.start();
         InputStreamReader read = new InputStreamReader(proc.getInputStream());
